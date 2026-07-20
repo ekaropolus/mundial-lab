@@ -9,8 +9,8 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     env:
-      DATABASE_PATH: ${{ runner.temp }}/mundial-lab/results/mundial_lab.sqlite3
-      RESULTS_DIR: ${{ runner.temp }}/mundial-lab/results
+      DATABASE_PATH: ${{ github.workspace }}/.ci/results/mundial_lab.sqlite3
+      RESULTS_DIR: ${{ github.workspace }}/.ci/results
     defaults:
       run:
         working-directory: apps/backend
