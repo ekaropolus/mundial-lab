@@ -5,6 +5,10 @@
 
 Simulador educativo de Copa del Mundo 2026 para mostrar datos abiertos, modelos probabilisticos y simulaciones Monte Carlo.
 
+Para una descripcion completa de la vision, usuarios, capacidades actuales,
+arquitectura, fuentes de datos, limites, seguridad y ruta de maduracion, consulta
+la [Concept Note](docs/CONCEPT_NOTE.md).
+
 El proyecto esta pensado como showcase:
 
 - Frontend ligero hecho por Polisplexity.
@@ -44,20 +48,18 @@ Servicios:
 - Postgres: localhost:5433
 - Redis: localhost:6379
 
-## Publicacion recomendada
+## Publicacion
 
 La documentacion existente separa marcas y responsabilidades:
 
 - **Polisplexity**: capa publica, experimentos de producto, simulacion, city intelligence y visualizacion.
 - **Hadox**: infraestructura cientifica, backends, datos, computo pesado y deployment interno con Drone cuando aplique.
 
-Por eso la ruta recomendada es:
-
-- Frontend publico: `https://mundial.hadox.org`
-- Backend/API: `https://api-mundial.hadox.org`
-- Fallback tecnico: GitHub Pages en el repo publico, usando el subdominio anterior como dominio canonico.
-
-El despliegue recomendado para la VPS esta documentado en `docs/deploy-vps-postgres.md`. El frontend incluye `apps/frontend/public/CNAME` para GitHub Pages con `mundial.hadox.org`, pero la ruta principal ahora es servir frontend y API desde la VPS con Caddy.
+Este snapshot no configura despliegue automatico ni reclama un dominio canonico.
+Los manifiestos Docker documentan topologias de referencia; el operador debe
+aportar y revisar DNS, TLS, proxy inverso, secretos, respaldos y observabilidad.
+La referencia para una instalacion con PostgreSQL esta en
+`docs/deploy-vps-postgres.md`.
 
 ## Comandos utiles
 
