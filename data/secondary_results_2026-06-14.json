@@ -1,0 +1,91 @@
+{
+  "snapshot": {
+    "source": "Secondary public result audit",
+    "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+    "source_version": "accessed_2026-06-14",
+    "trust_level": "publico_ingestado",
+    "notes": "Confirmaciones secundarias para elevar resultados coincidentes a real_verificado. ESPN se mantiene como fuente primaria automatica; este archivo contrasta contra FOX/FIFA/Al Jazeera/AP segun disponibilidad."
+  },
+  "confirmations": [
+    {
+      "match_id": "match-001",
+      "home_score": 2,
+      "away_score": 0,
+      "source": "Al Jazeera liveblog / FIFA schedule",
+      "source_url": "https://www.aljazeera.com/sports/liveblog/2026/6/11/live-mexico-vs-south-africa-world-cup-2026",
+      "notes": "Mexico 2-0 South Africa, full time."
+    },
+    {
+      "match_id": "match-002",
+      "home_score": 2,
+      "away_score": 1,
+      "source": "FOX Sports scores",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+      "notes": "South Korea 2-1 Czech Republic."
+    },
+    {
+      "match_id": "match-003",
+      "home_score": 1,
+      "away_score": 1,
+      "source": "FOX Sports scores",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+      "notes": "Canada 1-1 Bosnia and Herzegovina."
+    },
+    {
+      "match_id": "match-004",
+      "home_score": 4,
+      "away_score": 1,
+      "source": "FOX Sports scores",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+      "notes": "United States 4-1 Paraguay."
+    },
+    {
+      "match_id": "match-005",
+      "home_score": 0,
+      "away_score": 1,
+      "source": "FOX Sports scores",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+      "notes": "Haiti 0-1 Scotland."
+    },
+    {
+      "match_id": "match-006",
+      "home_score": 2,
+      "away_score": 0,
+      "source": "FOX Sports scores",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+      "notes": "Australia 2-0 Turkey."
+    },
+    {
+      "match_id": "match-007",
+      "home_score": 1,
+      "away_score": 1,
+      "source": "FIFA match report / FOX Sports scores",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/brazil-morocco-highlights-match-report",
+      "notes": "Brazil 1-1 Morocco."
+    },
+    {
+      "match_id": "match-008",
+      "home_score": 1,
+      "away_score": 1,
+      "source": "FOX Sports scores",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+      "notes": "Qatar 1-1 Switzerland."
+    },
+    {
+      "match_id": "match-010",
+      "home_score": 7,
+      "away_score": 1,
+      "source": "FOX Sports scores",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup/scores",
+      "notes": "Germany 7-1 Curacao."
+    },
+    {
+      "match_id": "match-011",
+      "home_score": 2,
+      "away_score": 2,
+      "source": "FOX Sports boxscore / AP",
+      "source_url": "https://www.foxsports.com/soccer/fifa-world-cup-men-netherlands-vs-japan-jun-14-2026-game-boxscore-647625",
+      "notes": "Netherlands 2-2 Japan, confirmed by FOX boxscore and AP report."
+    }
+  ]
+}

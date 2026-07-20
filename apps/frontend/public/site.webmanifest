@@ -1,0 +1,18 @@
+{
+  "name": "Mundial Lab",
+  "short_name": "Mundial Lab",
+  "description": "Simulación Monte Carlo, replay 3D y salas de partido para competir leyendo el Mundial con datos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0f14",
+  "theme_color": "#0b0f14",
+  "lang": "es-MX",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

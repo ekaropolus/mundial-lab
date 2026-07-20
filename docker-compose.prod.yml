@@ -1,0 +1,179 @@
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      FRONTEND_DOMAIN: ${FRONTEND_DOMAIN:-mundial.hadox.org}
+      API_DOMAIN: ${API_DOMAIN:-api-mundial.hadox.org}
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://api-mundial.hadox.org}
+    restart: unless-stopped
+    expose:
+      - "80"
+
+  backend:
+    build: ./apps/backend
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers ${API_WORKERS:-2}
+    restart: unless-stopped
+    environment:
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://mundial.hadox.org}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mundial}:${POSTGRES_PASSWORD:-mundial_change_me}@postgres:5432/${POSTGRES_DB:-mundial_lab}
+      REDIS_URL: redis://redis:6379/0
+      RESULTS_DIR: /app/results
+      PUBLIC_FRONTEND_URL: ${PUBLIC_FRONTEND_URL:-https://mundial.hadox.org}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+      META_IG_ACCESS_TOKEN: ${META_IG_ACCESS_TOKEN:-}
+      META_INSTAGRAM_ACCOUNT_ID: ${META_INSTAGRAM_ACCOUNT_ID:-}
+      INSTAGRAM_IMAGE_PUBLIC_BASE: ${INSTAGRAM_IMAGE_PUBLIC_BASE:-https://api-mundial.hadox.org/social/instagram}
+      SOCIAL_AUTO_APPROVE_RENDERED: "false"
+      SOCIAL_PUBLISH_ONLY_TODAY: ${SOCIAL_PUBLISH_ONLY_TODAY:-true}
+      SOCIAL_PUBLISH_TZ: ${SOCIAL_PUBLISH_TZ:-America/Mexico_City}
+    expose:
+      - "8000"
+    volumes:
+      - ./data:/data:ro
+      - backend_results:/app/results
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  worker:
+    build: ./apps/backend
+    command: rq worker mundial-sim --url redis://redis:6379/0
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mundial}:${POSTGRES_PASSWORD:-mundial_change_me}@postgres:5432/${POSTGRES_DB:-mundial_lab}
+      REDIS_URL: redis://redis:6379/0
+      RESULTS_DIR: /app/results
+      PUBLIC_FRONTEND_URL: ${PUBLIC_FRONTEND_URL:-https://mundial.hadox.org}
+      INSTAGRAM_IMAGE_PUBLIC_BASE: ${INSTAGRAM_IMAGE_PUBLIC_BASE:-https://api-mundial.hadox.org/social/instagram}
+    volumes:
+      - ./data:/data:ro
+      - backend_results:/app/results
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  automation:
+    build: ./apps/backend
+    command: python scripts/automation_loop.py
+    restart: unless-stopped
+    environment:
+      PYTHONPATH: /app
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mundial}:${POSTGRES_PASSWORD:-mundial_change_me}@postgres:5432/${POSTGRES_DB:-mundial_lab}
+      REDIS_URL: redis://redis:6379/0
+      RESULTS_DIR: /app/results
+      PUBLIC_FRONTEND_URL: ${PUBLIC_FRONTEND_URL:-https://mundial.hadox.org}
+      AUTOMATION_INTERVAL_SECONDS: ${AUTOMATION_INTERVAL_SECONDS:-1800}
+      AUTOMATION_SMART_SCHEDULER: ${AUTOMATION_SMART_SCHEDULER:-true}
+      AUTOMATION_LIVE_INTERVAL_SECONDS: ${AUTOMATION_LIVE_INTERVAL_SECONDS:-60}
+      AUTOMATION_CLOSING_INTERVAL_SECONDS: ${AUTOMATION_CLOSING_INTERVAL_SECONDS:-180}
+      AUTOMATION_UPCOMING_INTERVAL_SECONDS: ${AUTOMATION_UPCOMING_INTERVAL_SECONDS:-600}
+      AUTOMATION_LOOKBACK_DAYS: ${AUTOMATION_LOOKBACK_DAYS:-3}
+      AUTOMATION_SIMULATIONS: ${AUTOMATION_SIMULATIONS:-2500}
+      AUTOMATION_AUTOPSY_BATCH_SIZE: ${AUTOMATION_AUTOPSY_BATCH_SIZE:-3}
+      AUTOMATION_AUTOPSY_SIMULATIONS: ${AUTOMATION_AUTOPSY_SIMULATIONS:-1200}
+      AUTOMATION_PUBLISH_SOCIAL: ${AUTOMATION_PUBLISH_SOCIAL:-false}
+      INSTAGRAM_REQUIRE_APPROVAL: ${INSTAGRAM_REQUIRE_APPROVAL:-true}
+      SOCIAL_AUTO_APPROVE_RENDERED: ${SOCIAL_AUTO_APPROVE_RENDERED:-false}
+      SOCIAL_CARD_FORMAT: ${SOCIAL_CARD_FORMAT:-square}
+      SOCIAL_PUBLISH_ONLY_TODAY: ${SOCIAL_PUBLISH_ONLY_TODAY:-true}
+      SOCIAL_PUBLISH_TZ: ${SOCIAL_PUBLISH_TZ:-America/Mexico_City}
+      AUTOMATION_SOCIAL_BATCH_SIZE: ${AUTOMATION_SOCIAL_BATCH_SIZE:-2}
+      AUTOMATION_CONFIRM_SECOND_SOURCE: ${AUTOMATION_CONFIRM_SECOND_SOURCE:-true}
+      AUTOMATION_SYNC_ENRICHMENT: ${AUTOMATION_SYNC_ENRICHMENT:-true}
+      AUTOMATION_SYNC_WEATHER: ${AUTOMATION_SYNC_WEATHER:-true}
+      META_IG_ACCESS_TOKEN: ${META_IG_ACCESS_TOKEN:-}
+      META_INSTAGRAM_ACCOUNT_ID: ${META_INSTAGRAM_ACCOUNT_ID:-}
+      INSTAGRAM_IMAGE_PUBLIC_BASE: ${INSTAGRAM_IMAGE_PUBLIC_BASE:-https://api-mundial.hadox.org/social/instagram}
+    volumes:
+      - ./data:/data:ro
+      - backend_results:/app/results
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  social-renderer:
+    build:
+      context: ./apps/social-renderer
+      dockerfile: Dockerfile
+    profiles: ["tools"]
+    environment:
+      FRONTEND_URL: ${PUBLIC_FRONTEND_URL:-https://mundial.hadox.org}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+    depends_on:
+      - frontend
+      - backend
+
+  social-renderer-loop:
+    build:
+      context: ./apps/social-renderer
+      dockerfile: Dockerfile
+    command: node scripts/publish-social-room-pending.mjs
+    restart: unless-stopped
+    environment:
+      FRONTEND_URL: ${PUBLIC_FRONTEND_URL:-https://mundial.hadox.org}
+      API_URL: ${SOCIAL_RENDERER_API_URL:-http://backend:8000}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+      SOCIAL_RENDERER_LOOP: ${SOCIAL_RENDERER_LOOP:-true}
+      SOCIAL_RENDERER_INTERVAL_SECONDS: ${SOCIAL_RENDERER_INTERVAL_SECONDS:-600}
+      SOCIAL_BATCH_SIZE: ${AUTOMATION_SOCIAL_BATCH_SIZE:-2}
+    depends_on:
+      - frontend
+      - backend
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-mundial_lab}
+      POSTGRES_USER: ${POSTGRES_USER:-mundial}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mundial_change_me}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mundial} -d ${POSTGRES_DB:-mundial_lab}"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+volumes:
+  backend_results:
+  caddy_config:
+  caddy_data:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.90.20.0/24

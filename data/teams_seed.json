@@ -1,0 +1,19 @@
+[
+  {"id":"arg","name":"Argentina","confederation":"CONMEBOL","group":"A","rating":1886,"attack":1.35,"defense":0.74,"qualified":true},
+  {"id":"fra","name":"Francia","confederation":"UEFA","group":"A","rating":1852,"attack":1.32,"defense":0.78,"qualified":true},
+  {"id":"jpn","name":"Japon","confederation":"AFC","group":"A","rating":1660,"attack":1.05,"defense":0.96,"qualified":true},
+  {"id":"can","name":"Canada","confederation":"CONCACAF","group":"A","rating":1565,"attack":0.94,"defense":1.08,"qualified":true},
+  {"id":"bra","name":"Brasil","confederation":"CONMEBOL","group":"B","rating":1812,"attack":1.26,"defense":0.82,"qualified":true},
+  {"id":"esp","name":"Espana","confederation":"UEFA","group":"B","rating":1801,"attack":1.21,"defense":0.84,"qualified":true},
+  {"id":"mar","name":"Marruecos","confederation":"CAF","group":"B","rating":1692,"attack":1.07,"defense":0.93,"qualified":true},
+  {"id":"nzl","name":"Nueva Zelanda","confederation":"OFC","group":"B","rating":1508,"attack":0.84,"defense":1.14,"qualified":true},
+  {"id":"eng","name":"Inglaterra","confederation":"UEFA","group":"C","rating":1830,"attack":1.25,"defense":0.80,"qualified":true},
+  {"id":"por","name":"Portugal","confederation":"UEFA","group":"C","rating":1795,"attack":1.18,"defense":0.87,"qualified":true},
+  {"id":"mex","name":"Mexico","confederation":"CONCACAF","group":"C","rating":1652,"attack":1.01,"defense":1.00,"qualified":true},
+  {"id":"kor","name":"Corea del Sur","confederation":"AFC","group":"C","rating":1635,"attack":1.00,"defense":1.02,"qualified":true},
+  {"id":"ned","name":"Paises Bajos","confederation":"UEFA","group":"D","rating":1788,"attack":1.17,"defense":0.86,"qualified":true},
+  {"id":"ger","name":"Alemania","confederation":"UEFA","group":"D","rating":1768,"attack":1.16,"defense":0.90,"qualified":true},
+  {"id":"usa","name":"Estados Unidos","confederation":"CONCACAF","group":"D","rating":1668,"attack":1.04,"defense":0.98,"qualified":true},
+  {"id":"qat","name":"Qatar","confederation":"AFC","group":"D","rating":1536,"attack":0.88,"defense":1.12,"qualified":true}
+]
+

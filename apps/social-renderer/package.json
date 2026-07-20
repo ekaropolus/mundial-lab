@@ -1,0 +1,9 @@
+{
+  "name": "mundial-lab-social-renderer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "playwright": "1.49.1"
+  }
+}
